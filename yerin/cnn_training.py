@@ -3,7 +3,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 
-def cnn_training(train_gen, val_gen, class_weight_dict, epochs=1):
+def cnn_training(train_gen, val_gen, class_weight_dict, epochs=1, model_name="cnn"):
     model = Sequential([
         Conv2D(64, (3,3), activation='relu', input_shape=(48,48,1), padding='same'),
         BatchNormalization(),
@@ -40,7 +40,7 @@ def cnn_training(train_gen, val_gen, class_weight_dict, epochs=1):
     callbacks = [
         EarlyStopping(patience=10, restore_best_weights=True),
         ReduceLROnPlateau(factor=0.5, patience=5),
-        ModelCheckpoint('best_emotion_model.h5', save_best_only=True)
+        ModelCheckpoint(f'../Models/training_{model_name}.keras', save_best_only=True)
     ]
 
     print("Training started...")

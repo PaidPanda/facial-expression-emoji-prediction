@@ -1,5 +1,5 @@
 import numpy as np
-from keras.src.legacy.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.utils import compute_class_weight
 
 
@@ -7,12 +7,13 @@ def data_generators(
         train_dir='../DataSets/train',
         val_dir='../DataSets/val',
         test_dir='../DataSets/test',
-        emotions=None
+        emotions=None,
+        image_size=(48, 48),
+        color_mode='grayscale'
 ):
     if emotions is None:
         emotions = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
     BATCH_SIZE = 64
-    IMG_SIZE = (48, 48)
 
     # Data transformation
     train_datagen = ImageDataGenerator(
@@ -31,8 +32,8 @@ def data_generators(
     # Data labeling
     train_gen = train_datagen.flow_from_directory(
         f'{train_dir}/',
-        target_size=IMG_SIZE,
-        color_mode='grayscale',
+        target_size=image_size,
+        color_mode=color_mode,
         batch_size=BATCH_SIZE,
         class_mode='categorical',
         shuffle=True
@@ -40,8 +41,8 @@ def data_generators(
 
     val_gen = val_datagen.flow_from_directory(
         f'{val_dir}/',
-        target_size=IMG_SIZE,
-        color_mode='grayscale',
+        target_size=image_size,
+        color_mode=color_mode,
         batch_size=BATCH_SIZE,
         class_mode='categorical',
         shuffle=False
@@ -49,8 +50,8 @@ def data_generators(
 
     test_gen = test_datagen.flow_from_directory(
         f'{test_dir}/',
-        target_size=IMG_SIZE,
-        color_mode='grayscale',
+        target_size=image_size,
+        color_mode=color_mode,
         batch_size=BATCH_SIZE,
         class_mode='categorical',
         shuffle=False
