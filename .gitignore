@@ -1,0 +1,7 @@
+__pycache__
+*.pyc
+/DataFiles
+/DataSets
+my_emotion_recognizer.h5
+best_emotion_model.h5
+.idea
