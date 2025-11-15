@@ -1,0 +1,7 @@
+__pycache__
+*.pyc
+/DataFiles
+/DataSets
+/Models
+*.h5
+.idea
