@@ -4,9 +4,9 @@ from sklearn.utils import compute_class_weight
 
 
 def data_generators(
-        train_dir='../DataSets/train',
-        val_dir='../DataSets/val',
-        test_dir='../DataSets/test',
+        train_dir='./DataSets/train',
+        val_dir='./DataSets/val',
+        test_dir='./DataSets/test',
         emotions=None,
         image_size=(48, 48),
         color_mode='grayscale'
