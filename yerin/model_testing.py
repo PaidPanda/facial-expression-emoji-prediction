@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
@@ -5,7 +6,8 @@ import seaborn as sns
 from sklearn.metrics import classification_report, confusion_matrix
 
 def model_testing(model, test_gen, model_name, emotions=None):
-    filename = "../Graphs/" + datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    os.makedirs("../Models", exist_ok=True)
+    time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
     if emotions is None:
         emotions = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 
@@ -33,8 +35,8 @@ def model_testing(model, test_gen, model_name, emotions=None):
     plt.xlabel('Predicted')
     plt.tight_layout()
     plt.show()
-    plt.savefig(f"{filename}_confusion_matrix.png")
+    plt.savefig(f"../Graphs/confusion_matrix_{time}.png")
 
     # Save final model
-    model.save(f'../Models/testing_{model_name}.keras')
-    print(f"Model saved as 'testing_{model_name}.keras'")
+    model.save(f'../Models/testing_{model_name}_{time}.keras')
+    print(f"Model saved as 'testing_{model_name}_{time}.keras'")

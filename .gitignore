@@ -3,5 +3,6 @@ __pycache__
 /DataFiles
 /DataSets
 /Models
+/Graphs
 *.h5
 .idea

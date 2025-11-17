@@ -1,9 +1,14 @@
 # Train a CNN model
+import os
+from datetime import datetime
+
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 
 def cnn_training(train_gen, val_gen, class_weight_dict, epochs=1, model_name="cnn"):
+    os.makedirs("../Models", exist_ok=True)
+    model_path = f"../Models/training_{model_name}_" + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + ".keras"
     model = Sequential([
         Conv2D(64, (3,3), activation='relu', input_shape=(48,48,1), padding='same'),
         BatchNormalization(),
@@ -40,7 +45,7 @@ def cnn_training(train_gen, val_gen, class_weight_dict, epochs=1, model_name="cn
     callbacks = [
         EarlyStopping(patience=10, restore_best_weights=True),
         ReduceLROnPlateau(factor=0.5, patience=5),
-        ModelCheckpoint(f'../Models/training_{model_name}.keras', save_best_only=True)
+        ModelCheckpoint(model_path, save_best_only=True)
     ]
 
     print("Training started...")
