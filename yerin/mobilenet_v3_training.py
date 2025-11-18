@@ -13,7 +13,7 @@ def mobilenet_v3_small_training(
         train_gen,
         val_gen,
         class_weight_dict,
-        input_shape=(96,96,3),
+        input_shape=(224,224,3),
         epochs=10,
         fine_tuning_epochs=10,
         model_name="mobilenet_v3_small"

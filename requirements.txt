@@ -6,3 +6,4 @@ tensorflow~=2.20.0
 kagglehub~=0.3.13
 keras~=3.11.3
 torchvision~=0.22.0
+opencv-python~=4.10.0.84
