@@ -1,7 +1,9 @@
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from sklearn.utils import compute_class_weight
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mobilenet_v2_preprocess
+from tensorflow.keras.applications.mobilenet_v3 import preprocess_input as mobilenet_v3_preprocess
+from tensorflow.keras.applications.efficientnet import preprocess_input as efficientnet_preprocess
 
 
 
@@ -32,6 +34,13 @@ def data_generators(
         val_datagen = ImageDataGenerator(rescale=1. / 255)
         test_datagen = ImageDataGenerator(rescale=1. / 255)
     else:
+        if model_name=='efficientnet_b0':
+            preprocess_input = efficientnet_preprocess
+        elif model_name=='mobilenet_v2':
+            preprocess_input = mobilenet_v2_preprocess
+        else:
+            preprocess_input = mobilenet_v3_preprocess
+
         image_size = (224, 224)
         color_mode = 'rgb'
         train_datagen = ImageDataGenerator(
