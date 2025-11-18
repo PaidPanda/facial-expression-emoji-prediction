@@ -10,16 +10,16 @@ from tensorflow.keras.optimizers import Adam
 
 # low-power devices, small GPUs, real-time inference, 30-80 FPS
 def mobilenet_v3_small_training(
+        time_stamp,
         train_gen,
         val_gen,
         class_weight_dict,
         input_shape=(224,224,3),
-        epochs=10,
-        fine_tuning_epochs=10,
+        epochs=100,
+        fine_tuning_epochs=100,
         model_name="mobilenet_v3_small"
         ):
-    os.makedirs("../Models", exist_ok=True)
-    model_path = f"../Models/training_{model_name}_" + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + ".keras"
+    model_path = f"../Models/{time_stamp}/training_{model_name}.keras"
     base_model = MobileNetV3Small(
         input_shape=input_shape,
         include_top=False,

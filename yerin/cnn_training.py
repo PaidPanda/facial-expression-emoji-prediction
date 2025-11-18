@@ -6,9 +6,14 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, BatchNormalization
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 
-def cnn_training(train_gen, val_gen, class_weight_dict, epochs=1, model_name="cnn"):
-    os.makedirs("../Models", exist_ok=True)
-    model_path = f"../Models/training_{model_name}_" + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + ".keras"
+def cnn_training(
+        time_stamp,
+        train_gen,
+        val_gen,
+        class_weight_dict,
+        epochs=100,
+        model_name="cnn"):
+    model_path = f"../Models/{time_stamp}/training_{model_name}.keras"
     model = Sequential([
         Conv2D(64, (3,3), activation='relu', input_shape=(48,48,1), padding='same'),
         BatchNormalization(),
