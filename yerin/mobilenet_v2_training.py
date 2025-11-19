@@ -1,6 +1,3 @@
-import os
-from datetime import datetime
-
 from tensorflow.keras.layers import GlobalAveragePooling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Dropout
@@ -53,7 +50,7 @@ def mobilenet_v2_training(
     ]
 
     print("Training started...")
-    model.fit(
+    history_1 = model.fit(
         train_gen,
         validation_data=val_gen,
         epochs=epochs,
@@ -92,7 +89,7 @@ def mobilenet_v2_training(
         )
     ]
 
-    model.fit(
+    history_2 = model.fit(
         train_gen,
         validation_data=val_gen,
         epochs=fine_tuning_epochs,
@@ -100,4 +97,13 @@ def mobilenet_v2_training(
         callbacks=callbacks_finetuning
     )
     model.save(model_path)
-    return model
+
+    full_history = {}
+    for key in history_1.history.keys():
+        full_history[key] = history_1.history[key] + history_2.history.get(key, [])
+
+    class History:
+        def __init__(self, history):
+            self.history = history
+
+    return model, History(full_history)

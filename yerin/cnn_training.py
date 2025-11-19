@@ -61,4 +61,4 @@ def cnn_training(
         class_weight=class_weight_dict,
         callbacks=callbacks
     )
-    return model
+    return model, history

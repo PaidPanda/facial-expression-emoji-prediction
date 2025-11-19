@@ -20,7 +20,7 @@ def data_generators(
 
     # Data transformation
     if model_name=='cnn':
-        image_size = (48, 48),
+        image_size = (48, 48)
         color_mode = 'grayscale'
         train_datagen = ImageDataGenerator(
             rescale=1. / 255,
@@ -34,6 +34,9 @@ def data_generators(
         val_datagen = ImageDataGenerator(rescale=1. / 255)
         test_datagen = ImageDataGenerator(rescale=1. / 255)
     else:
+        image_size = (224, 224)
+        color_mode = 'rgb'
+
         if model_name=='efficientnet_b0':
             preprocess_input = efficientnet_preprocess
         elif model_name=='mobilenet_v2':
@@ -41,8 +44,6 @@ def data_generators(
         else:
             preprocess_input = mobilenet_v3_preprocess
 
-        image_size = (224, 224)
-        color_mode = 'rgb'
         train_datagen = ImageDataGenerator(
             preprocessing_function=preprocess_input,
             rotation_range=15,

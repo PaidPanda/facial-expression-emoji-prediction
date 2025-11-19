@@ -1,6 +1,3 @@
-import os
-from datetime import datetime
-
 from tensorflow.keras.layers import GlobalAveragePooling2D
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Dropout
@@ -19,6 +16,7 @@ def efficientnet_b0_training(
         model_name="efficientnet_b0"
         ):
     model_path = f"../Models/{time_stamp}/training_{model_name}.keras"
+
     base_model = EfficientNetB0(
         input_shape=input_shape,
         include_top=False,
@@ -52,7 +50,7 @@ def efficientnet_b0_training(
     ]
 
     print("Training started...")
-    model.fit(
+    history_1 = model.fit(
         train_gen,
         validation_data=val_gen,
         epochs=epochs,
@@ -91,12 +89,22 @@ def efficientnet_b0_training(
         )
     ]
 
-    model.fit(
+    history_2 = model.fit(
         train_gen,
         validation_data=val_gen,
         epochs=fine_tuning_epochs,
         class_weight=class_weight_dict,
         callbacks=callbacks_finetuning
     )
+
     model.save(model_path)
-    return model
+
+    full_history = {}
+    for key in history_1.history.keys():
+        full_history[key] = history_1.history[key] + history_2.history.get(key, [])
+
+    class History:
+        def __init__(self, history):
+            self.history = history
+
+    return model, History(full_history)
