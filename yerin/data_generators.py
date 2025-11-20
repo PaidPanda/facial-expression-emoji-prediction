@@ -13,15 +13,16 @@ def data_generators(
         val_dir='../DataSets/val',
         test_dir='../DataSets/test',
         emotions=None,
+        image_size=(128, 128),
+        batch_size=32
 ):
     if emotions is None:
         emotions = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
-    BATCH_SIZE = 64
+
+    color_mode = 'rgb'
 
     # Data transformation
     if model_name=='cnn':
-        image_size = (48, 48)
-        color_mode = 'grayscale'
         train_datagen = ImageDataGenerator(
             rescale=1. / 255,
             rotation_range=15,
@@ -34,9 +35,6 @@ def data_generators(
         val_datagen = ImageDataGenerator(rescale=1. / 255)
         test_datagen = ImageDataGenerator(rescale=1. / 255)
     else:
-        image_size = (224, 224)
-        color_mode = 'rgb'
-
         if model_name=='efficientnet_b0':
             preprocess_input = efficientnet_preprocess
         elif model_name=='mobilenet_v2':
@@ -66,7 +64,7 @@ def data_generators(
         f'{train_dir}/',
         target_size=image_size,
         color_mode=color_mode,
-        batch_size=BATCH_SIZE,
+        batch_size=batch_size,
         class_mode='categorical',
         shuffle=True
     )
@@ -75,7 +73,7 @@ def data_generators(
         f'{val_dir}/',
         target_size=image_size,
         color_mode=color_mode,
-        batch_size=BATCH_SIZE,
+        batch_size=batch_size,
         class_mode='categorical',
         shuffle=False
     )
@@ -84,7 +82,7 @@ def data_generators(
         f'{test_dir}/',
         target_size=image_size,
         color_mode=color_mode,
-        batch_size=BATCH_SIZE,
+        batch_size=batch_size,
         class_mode='categorical',
         shuffle=False
     )

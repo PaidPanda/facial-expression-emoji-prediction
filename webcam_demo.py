@@ -2,7 +2,7 @@ from tensorflow.keras.models import load_model
 import cv2
 import numpy as np
 
-model = load_model('my_emotion_recognizer_best_69.4%.keras')
+model = load_model('./Models/2025_11_17_21_53_14/training_mobilenet_v2.keras')
 EMOTIONS = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 

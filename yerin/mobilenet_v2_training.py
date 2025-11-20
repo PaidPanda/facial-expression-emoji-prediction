@@ -4,6 +4,9 @@ from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import load_model
+from tensorflow.keras.callbacks import CSVLogger
+from tensorflow.keras.callbacks import LearningRateScheduler
 
 # low-power devices, small GPUs, real-time inference, 30-80 FPS
 def mobilenet_v2_training(
@@ -11,12 +14,18 @@ def mobilenet_v2_training(
         train_gen,
         val_gen,
         class_weight_dict,
-        input_shape=(224,224,3),
-        epochs=100,
-        fine_tuning_epochs=100,
+        initial_epochs=0,
+        epochs=30,
+        input_shape=(128, 128, 3),
+        learning_rate=5e-4,
+        csv_name='training_log',
+        fine_tuning_epochs=120,
+        is_load_model=True,
         model_name="mobilenet_v2"
         ):
     model_path = f"../Models/{time_stamp}/training_{model_name}.keras"
+    csv_path = f"../Graphs/{time_stamp}/{csv_name}.csv"
+
     base_model = MobileNetV2(
         input_shape=input_shape,
         include_top=False,
@@ -30,63 +39,75 @@ def mobilenet_v2_training(
     x = Dropout(0.3)(x)
     outputs = Dense(7, activation="softmax")(x)
     model = Model(inputs=base_model.input, outputs=outputs)
-    model.compile(
-        optimizer=Adam(learning_rate=1e-4),
-        loss='categorical_crossentropy',
-        metrics=['accuracy'])
 
-    # Callbacks
+    if is_load_model:
+        print("Loading best model from checkpoint...")
+        model = load_model(model_path)
+
+    model.summary()
+    optimizer = Adam(learning_rate=learning_rate)
+
+    # recompile — does NOT erase weights, only resets optimizer
+    model.compile(
+        optimizer=optimizer,
+        loss='categorical_crossentropy',
+        metrics=['accuracy']
+    )
+
+    def lr_schedule(epoch):
+        # gentle decay starting after epoch 50
+        initial = epochs
+        if epoch < 50:
+            return initial
+        else:
+            decay = 0.96 ** (epoch - 50)
+            return initial * decay
+
     callbacks_training = [
-        EarlyStopping(monitor='val_loss',
-                      patience=8,
-                      restore_best_weights=True),
-        ReduceLROnPlateau(monitor='val_loss',
-                          factor=0.5, patience=5,
-                          verbose=1),
-        ModelCheckpoint(model_path,
-                        monitor='val_accuracy',
-                        save_best_only=True,
-                        mode='max')
+        EarlyStopping(monitor='val_accuracy', patience=35, restore_best_weights=True, verbose=1),
+        ModelCheckpoint(model_path, monitor='val_accuracy', save_best_only=True, verbose=1),
+        CSVLogger(csv_path, append=True),
+        LearningRateScheduler(lr_schedule, verbose=1)
     ]
+
 
     print("Training started...")
     history_1 = model.fit(
         train_gen,
         validation_data=val_gen,
         epochs=epochs,
+        initial_epoch=initial_epochs,
         class_weight=class_weight_dict,
         callbacks=callbacks_training
     )
 
-    print("Fine-tuning mobilenet v2")
-    fine_tune_at = int(len(base_model.layers) * 0.8)
+    print("Fine-tuning efficientnet b0")
+    fine_tune_at = int(len(base_model.layers) * 0.7)
     for layer in base_model.layers[:fine_tune_at]:
         layer.trainable = False
     for layer in base_model.layers[fine_tune_at:]:
         layer.trainable = True
 
+    def lr_schedule(epoch):
+        # gentle decay starting after epoch 50
+        initial = fine_tuning_epochs
+        if epoch < 50:
+            return initial
+        else:
+            decay = 0.96 ** (epoch - 50)
+            return initial * decay
+
     model.compile(
-        optimizer=Adam(learning_rate=1e-5),
+        optimizer=optimizer,
         loss='categorical_crossentropy',
         metrics=['accuracy']
     )
 
     callbacks_finetuning = [
-        EarlyStopping(monitor='val_loss',
-                      patience=8,
-                      restore_best_weights=True),
-        ReduceLROnPlateau(
-            monitor='val_loss',
-            factor=0.5,
-            patience=5,
-            verbose=1
-        ),
-        ModelCheckpoint(
-            model_path,
-            monitor='val_accuracy',
-            save_best_only=True,
-            mode='max'
-        )
+        EarlyStopping(monitor='val_accuracy', patience=35, restore_best_weights=True, verbose=1),
+        ModelCheckpoint(model_path, monitor='val_accuracy', save_best_only=True, verbose=1),
+        CSVLogger(csv_path, append=True),
+        LearningRateScheduler(lr_schedule, verbose=1)
     ]
 
     history_2 = model.fit(
@@ -96,6 +117,7 @@ def mobilenet_v2_training(
         class_weight=class_weight_dict,
         callbacks=callbacks_finetuning
     )
+
     model.save(model_path)
 
     full_history = {}
