@@ -3,8 +3,6 @@ import cv2
 import numpy as np
 from collections import deque
 
-model = load_model('./Models/2025_11_17_21_53_14/training_mobilenet_v2.keras')
-# Load model
 model = load_model("my_emotion_recognizer_best_69.4%.keras")
 EMOTIONS = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 
