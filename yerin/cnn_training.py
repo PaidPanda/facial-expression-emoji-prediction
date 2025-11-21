@@ -54,7 +54,6 @@ def cnn_training(
     model.summary()
     optimizer = Adam(learning_rate=learning_rate)
 
-    # recompile — does NOT erase weights, only resets optimizer
     model.compile(
         optimizer=optimizer,
         loss='categorical_crossentropy',
@@ -62,7 +61,6 @@ def cnn_training(
     )
 
     def lr_schedule(epoch):
-        # gentle decay starting after epoch 50
         initial = 5e-4
         if epoch < 50:
             return initial

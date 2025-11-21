@@ -19,16 +19,16 @@ if __name__ == "__main__":
     time_stamp = create_folders()
 
     # CNN
-    train_gen, val_gen, test_gen, class_weight_dict =data_generators(image_size=(48,48))
-    cnn_model, history = cnn_training(time_stamp=time_stamp, train_gen=train_gen, val_gen=val_gen,
-                             class_weight_dict=class_weight_dict, is_load_model=False, epochs=1, input_shape=(48,48,3))
-    y_pred_proba, y_pred, y_true = model_testing(time_stamp=time_stamp, model=cnn_model, test_gen=test_gen, model_name="cnn")
+    # train_gen, val_gen, test_gen, class_weight_dict =data_generators(image_size=(48,48))
+    # cnn_model, history = cnn_training(time_stamp=time_stamp, train_gen=train_gen, val_gen=val_gen,
+    #                          class_weight_dict=class_weight_dict, is_load_model=False, epochs=1, input_shape=(48,48,3))
+    # y_pred_proba, y_pred, y_true = model_testing(time_stamp=time_stamp, model=cnn_model, test_gen=test_gen, model_name="cnn")
 
     # MobileNet V2
-    # train_gen, val_gen, test_gen, class_weight_dict =data_generators(model_name="mobilenet_v2")
-    # mobilenet_v2_model, history = mobilenet_v2_training(time_stamp=time_stamp, train_gen=train_gen, val_gen=val_gen,
-    #                                         class_weight_dict=class_weight_dict, epochs=100, fine_tuning_epochs=100)
-    # y_pred_proba, y_pred, y_true = model_testing(time_stamp=time_stamp, model=mobilenet_v2_model, test_gen=test_gen, model_name="mobilenet_v2")
+    train_gen, val_gen, test_gen, class_weight_dict =data_generators(model_name="mobilenet_v2")
+    mobilenet_v2_model, history = mobilenet_v2_training(time_stamp=time_stamp, train_gen=train_gen, val_gen=val_gen,
+                                            class_weight_dict=class_weight_dict, epochs=1, fine_tuning_epochs=0, is_load_model=False)
+    y_pred_proba, y_pred, y_true = model_testing(time_stamp=time_stamp, model=mobilenet_v2_model, test_gen=test_gen, model_name="mobilenet_v2")
 
     # MobileNet V3 small
     # train_gen, val_gen, test_gen, class_weight_dict =data_generators(model_name='mobilenet_v3_small')

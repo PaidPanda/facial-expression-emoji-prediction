@@ -17,7 +17,8 @@ def mobilenet_v2_training(
         initial_epochs=0,
         epochs=30,
         input_shape=(128, 128, 3),
-        learning_rate=5e-4,
+        training_learning_rate=5e-4,
+        fine_tuning_learning_rate=5e-5,
         csv_name='training_log',
         fine_tuning_epochs=120,
         is_load_model=True,
@@ -45,18 +46,16 @@ def mobilenet_v2_training(
         model = load_model(model_path)
 
     model.summary()
-    optimizer = Adam(learning_rate=learning_rate)
+    training_optimizer = Adam(learning_rate=training_learning_rate)
 
-    # recompile — does NOT erase weights, only resets optimizer
     model.compile(
-        optimizer=optimizer,
+        optimizer=training_optimizer,
         loss='categorical_crossentropy',
         metrics=['accuracy']
     )
 
     def lr_schedule(epoch):
-        # gentle decay starting after epoch 50
-        initial = epochs
+        initial = training_learning_rate
         if epoch < 50:
             return initial
         else:
@@ -90,15 +89,17 @@ def mobilenet_v2_training(
 
     def lr_schedule(epoch):
         # gentle decay starting after epoch 50
-        initial = fine_tuning_epochs
+        initial = fine_tuning_learning_rate
         if epoch < 50:
-            return initial
+            return float(initial)
         else:
             decay = 0.96 ** (epoch - 50)
-            return initial * decay
+            return float(initial * decay)
+
+    training_optimizer = Adam(learning_rate=training_learning_rate)
 
     model.compile(
-        optimizer=optimizer,
+        optimizer=training_optimizer,
         loss='categorical_crossentropy',
         metrics=['accuracy']
     )
