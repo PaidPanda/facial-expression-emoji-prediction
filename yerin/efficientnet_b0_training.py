@@ -20,7 +20,7 @@ def efficientnet_b0_training(
         fine_tuning_learning_rate=5e-5,
         csv_name='training_log',
         fine_tuning_epochs=120,
-        is_load_model=True,
+        is_load_model=False,
         model_name="efficientnet_b0"
         ):
     model_path = f"../Models/{time_stamp}/training_{model_name}.keras"

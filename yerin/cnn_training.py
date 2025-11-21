@@ -16,7 +16,7 @@ def cnn_training(
         initial_epochs=0,
         epochs=150,
         model_name="cnn",
-        is_load_model=True,
+        is_load_model=False,
         learning_rate=5e-4,
         csv_name='training_log',
         input_shape=(128, 128, 3)
