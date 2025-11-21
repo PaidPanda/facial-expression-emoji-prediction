@@ -60,7 +60,7 @@ def generate_graphs(time_stamp, history, y_pred_proba, y_pred, y_true, emotions=
     plt.close()
 
     # Report
-    report = classification_report(y_true, np.argmax(y_pred_proba, axis=1), output_dict=True)
+    report = classification_report(y_true, y_pred, output_dict=True)
     df = pd.DataFrame(report).transpose()
 
     # Per-class metrics
@@ -78,8 +78,15 @@ def generate_graphs(time_stamp, history, y_pred_proba, y_pred, y_true, emotions=
     plt.savefig(f"../Graphs/{time_stamp}/per_class_metrics.png")
     plt.close()
 
+    # Saving the report
+    report = classification_report(y_true, y_pred, target_names=emotions, output_dict=True)
+    csv_path = f"../Graphs/{time_stamp}/report.csv"
+    df_report = pd.DataFrame(report).transpose()
+    df_report.to_csv(csv_path, index=True)
+
+    report = classification_report(y_true, y_pred, target_names=emotions, output_dict=False)
     print("\n" + "=" * 50)
-    print(classification_report(y_true, y_pred, target_names=emotions))
+    print(report)
     print("=" * 50)
 
     # Confusion Matrix
