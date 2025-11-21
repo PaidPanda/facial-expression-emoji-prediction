@@ -17,8 +17,7 @@ def mobilenet_v3_small_training(
         initial_epochs=0,
         epochs=30,
         input_shape=(128, 128, 3),
-        training_learning_rate=5e-4,
-        fine_tuning_learning_rate=5e-5,
+        learning_rate=5e-4,
         csv_name='training_log',
         fine_tuning_epochs=120,
         is_load_model=False,
@@ -46,7 +45,7 @@ def mobilenet_v3_small_training(
         model = load_model(model_path)
 
     model.summary()
-    training_optimizer = Adam(learning_rate=training_learning_rate)
+    training_optimizer = Adam(learning_rate=learning_rate)
 
     model.compile(
         optimizer=training_optimizer,
@@ -55,7 +54,7 @@ def mobilenet_v3_small_training(
     )
 
     def lr_schedule(epoch):
-        initial = epochs
+        initial = learning_rate
         if epoch < 50:
             return initial
         else:
@@ -88,14 +87,14 @@ def mobilenet_v3_small_training(
         layer.trainable = True
 
     def lr_schedule(epoch):
-        initial = fine_tuning_learning_rate
+        initial = learning_rate * 0.1
         if epoch < 50:
             return initial
         else:
             decay = 0.96 ** (epoch - 50)
             return initial * decay
 
-    fine_tuning_optimizer = Adam(learning_rate=fine_tuning_learning_rate)
+    fine_tuning_optimizer = Adam(learning_rate=learning_rate * 0.1)
     model.compile(
         optimizer=fine_tuning_optimizer,
         loss='categorical_crossentropy',
