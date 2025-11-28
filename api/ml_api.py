@@ -12,7 +12,8 @@ smoother = Smoother()
 class ImageData(BaseModel):
     image: str
 
-print('ML API is running')
+print('ML API is running.')
+
 @app.post("/predict-cnn")
 def predict(data: ImageData):
     x = decode_and_preprocess(data.image)
