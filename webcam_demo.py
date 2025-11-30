@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from collections import deque
 
-model = load_model("my_emotion_recognizer_best_69.4%.keras")
+model = load_model("emotion_recognizer.keras")
 EMOTIONS = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 
 # Face detector
