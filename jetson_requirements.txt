@@ -1,0 +1,20 @@
+# Jetson-specific requirements for TensorRT emotion recognition
+
+# Python packages (install via pip3)
+
+numpy==1.16.1
+pycuda==2021.1
+opencv-python==4.1.1
+
+# Note: PyCUDA wheel must match Python 3.6 and aarch64 architecture
+# pip3 install pycuda-2021.1-cp36-cp36m-linux_aarch64.whl
+# python3 -c "import pycuda.autoinit; import pycuda.driver as cuda; print('PyCUDA OK')"
+# System dependencies (install via apt)
+# sudo apt-get install libboost-python1.65-dev libboost-python1.65.1
+
+# Pre-installed via JetPack 4.6.1:
+# CUDA 10.2.300
+# cuDNN 8.2.1
+# TensorRT 8.2.1.8
+# Python 3.6.9
+# OpenCV 4.1.1

@@ -16,7 +16,7 @@ DataFiles/
 Run train.bat (double-click) and choose one of the options:
 1) Run 4 comparison models
 2) Run the best CNN model
-3) Run the webca demo, but make sure you have the emojis folder
+3) Run the webcam demo, but make sure you have the emojis folder
 4) Exit
 
 To run application:
@@ -42,3 +42,10 @@ To compute final model:
 3) Find 'my_emotion_recognizer.h5' output file in root directory
 4) Run convert_h5_to_keras.py
 5) Run webcam_demo.py
+
+For NVIDIA jetson
+pip install -r jetson_requirements.txt
+
+1) Ensure emotionnet.engine is in the directory
+2) Run: python jetson_demo.py
+3) Press Q to quit
