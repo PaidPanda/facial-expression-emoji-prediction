@@ -1,0 +1,22 @@
+To run application:
+1) Ensure 'my_emotion_recognizer_best_69.4%.keras' file is in the root folder
+2) Run webcam_demo.py
+
+To run application on jetson:
+1) Ensure 'emotionnet.engine' is in the directory
+2) Run jetson_demo.py
+
+To compare models (train/test):
+1) Navigate to training_models directory
+2) Run main.py
+3) Input '1' for data injection and dataset preparation
+4) Wait for dataset to download...
+5) Select model of choice
+6) View output in 'Models' and 'Graphs' folders
+
+To compute final model:
+1) Ensure main.py option '1' has run already for the dataset
+2) Run cNN.py in root folder
+3) Find 'my_emotion_recognizer.h5' output file in root directory
+4) Run convert_h5_to_keras.py
+5) Run webcam_demo.py
