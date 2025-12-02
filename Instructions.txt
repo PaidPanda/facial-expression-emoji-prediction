@@ -1,8 +1,28 @@
-Install required packages with pip install -r requirements
+1. Install Dependencies
+pip install -r requirements.txt
+
+2. Prepare Dataset
+Ensure the dataset folder DataFiles is in the project root:
+DataFiles/
+    angry/
+    disgust/
+    fear/
+    happy/
+    neutral/
+    sad/
+    surprise/
+
+3. Train Models
+Run train.bat (double-click) and choose one of the options:
+1) Run 4 comparison models
+2) Run the best CNN model
+3) Run the webca demo, but make sure you have the emojis folder
+4) Exit
 
 To run application:
 1) Ensure 'my_emotion_recognizer_best_69.4%.keras' file is in the root folder
 2) Run webcam_demo.py
+3) Press Q to quit
 
 To run application on jetson:
 1) Ensure 'emotionnet.engine' is in the directory
@@ -21,5 +41,4 @@ To compute final model:
 2) Run cNN.py in root folder
 3) Find 'my_emotion_recognizer.h5' output file in root directory
 4) Run convert_h5_to_keras.py
-
 5) Run webcam_demo.py
