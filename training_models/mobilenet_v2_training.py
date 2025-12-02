@@ -15,7 +15,7 @@ def mobilenet_v2_training(
         val_gen,
         class_weight_dict,
         initial_epochs=0,
-        epochs=30,
+        epochs=150,
         input_shape=(128, 128, 3),
         learning_rate=5e-4,
         csv_name='training_log',
@@ -79,52 +79,54 @@ def mobilenet_v2_training(
         callbacks=callbacks_training
     )
 
-    print("Fine-tuning efficientnet b0")
-    fine_tune_at = int(len(base_model.layers) * 0.7)
-    for layer in base_model.layers[:fine_tune_at]:
-        layer.trainable = False
-    for layer in base_model.layers[fine_tune_at:]:
-        layer.trainable = True
+    # print("Fine-tuning efficientnet b0")
+    # fine_tune_at = int(len(base_model.layers) * 0.7)
+    # for layer in base_model.layers[:fine_tune_at]:
+    #     layer.trainable = False
+    # for layer in base_model.layers[fine_tune_at:]:
+    #     layer.trainable = True
+    #
+    # def lr_schedule(epoch):
+    #     initial = learning_rate * 0.1
+    #     if epoch < 50:
+    #         return float(initial)
+    #     else:
+    #         decay = 0.96 ** (epoch - 50)
+    #         return float(initial * decay)
+    #
+    # training_optimizer = Adam(learning_rate=learning_rate * 0.1)
+    #
+    # model.compile(
+    #     optimizer=training_optimizer,
+    #     loss='categorical_crossentropy',
+    #     metrics=['accuracy']
+    # )
 
-    def lr_schedule(epoch):
-        initial = learning_rate * 0.1
-        if epoch < 50:
-            return float(initial)
-        else:
-            decay = 0.96 ** (epoch - 50)
-            return float(initial * decay)
+    # callbacks_finetuning = [
+    #     EarlyStopping(monitor='val_accuracy', patience=35, restore_best_weights=True, verbose=1),
+    #     ModelCheckpoint(model_path, monitor='val_accuracy', save_best_only=True, verbose=1),
+    #     CSVLogger(csv_path, append=True),
+    #     LearningRateScheduler(lr_schedule, verbose=1)
+    # ]
 
-    training_optimizer = Adam(learning_rate=learning_rate * 0.1)
-
-    model.compile(
-        optimizer=training_optimizer,
-        loss='categorical_crossentropy',
-        metrics=['accuracy']
-    )
-
-    callbacks_finetuning = [
-        EarlyStopping(monitor='val_accuracy', patience=35, restore_best_weights=True, verbose=1),
-        ModelCheckpoint(model_path, monitor='val_accuracy', save_best_only=True, verbose=1),
-        CSVLogger(csv_path, append=True),
-        LearningRateScheduler(lr_schedule, verbose=1)
-    ]
-
-    history_2 = model.fit(
-        train_gen,
-        validation_data=val_gen,
-        epochs=fine_tuning_epochs,
-        class_weight=class_weight_dict,
-        callbacks=callbacks_finetuning
-    )
+    # history_2 = model.fit(
+    #     train_gen,
+    #     validation_data=val_gen,
+    #     epochs=fine_tuning_epochs,
+    #     class_weight=class_weight_dict,
+    #     callbacks=callbacks_finetuning
+    # )
 
     model.save(model_path)
 
-    full_history = {}
-    for key in history_1.history.keys():
-        full_history[key] = history_1.history[key] + history_2.history.get(key, [])
+    # full_history = {}
+    # for key in history_1.history.keys():
+    #     full_history[key] = history_1.history[key] + history_2.history.get(key, [])
+    #
+    # class History:
+    #     def __init__(self, history):
+    #         self.history = history
 
-    class History:
-        def __init__(self, history):
-            self.history = history
+    # return model, History(full_history)
 
-    return model, History(full_history)
+    return model, history_1
